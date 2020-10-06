@@ -12,6 +12,7 @@ void main() {
   // gl_Position is a special variable a vertex shader
   // is responsible for setting
   gl_Position = a_position;
+  gl_PointSize = 50.0;
 }
 `;
 
@@ -67,6 +68,8 @@ function main() {
         return;
     }
 
+
+
     // create GLSL shaders, upload the GLSL source, compile the shaders
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -87,7 +90,10 @@ function main() {
         0, 0,
         0, 0.5,
         0.7, 0,
+        1, 1,
+        -1, -1,
     ];
+
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
     // Create a vertex array object (attribute state)
@@ -117,16 +123,19 @@ function main() {
     gl.clearColor(1, 1, 1, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao);
 
+
     // draw
-    var primitiveType = gl.TRIANGLES;
+    // var primitiveType = gl.TRIANGLES;
+    var primitiveType = gl.POINTS;
     var offset = 0;
-    var count = 3;
+    var count = 5;
     gl.drawArrays(primitiveType, offset, count);
 }
 
