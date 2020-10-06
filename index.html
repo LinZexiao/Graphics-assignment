@@ -40,14 +40,24 @@
 
         }
 
-        #renderCanvas {
+        #inCanvasBox {
+            background-color: white;
             width: 500px;
             height: 500px;
             position: absolute;
             top: 50%;
             left: 50%;
-
             transform: translate(-50%, -50%);
+        }
+
+        #renderCanvas {
+            width: 500px;
+            height: 500px;
+            /* position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%); */
             touch-action: none;
         }
 
@@ -89,7 +99,10 @@
 <body>
     <div id="bigbox">
         <div id="canvasBox">
-            <canvas id="renderCanvas">你的浏览器似乎不支持或者禁用了HTML5 <code>&lt;canvas&gt;</code> 元素.</canvas>
+            <div id="inCanvasBox">
+
+                <canvas id="renderCanvas">你的浏览器似乎不支持或者禁用了HTML5 <code>&lt;canvas&gt;</code> 元素.</canvas>
+            </div>
         </div>
         <div id="ctrlBox">
             <div id="innerbox">
@@ -133,6 +146,7 @@
     </div>
 </body>
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="algorithm.js"></script>
 <script src="index.js"></script>
 
 </html>

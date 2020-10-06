@@ -63,6 +63,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
     return undefined;
 }
 
+
+
 function main(positions) {
     // Get A WebGL context
     var canvas = document.querySelector("#renderCanvas");
