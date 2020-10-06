@@ -15,7 +15,7 @@ void main() {
   // gl_Position is a special variable a vertex shader
   // is responsible for setting
   gl_Position = a_position;
-  gl_PointSize = 20.0;
+  gl_PointSize = 5.0;
 }
 `;
 
@@ -89,14 +89,6 @@ function main(positions) {
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-    // var positions = [
-    //     0, 0,
-    //     0, 0.5,
-    //     0.7, 0,
-    //     1, 1,
-    //     -1, -1,
-    // ];
-
 
     //load customized data
     var mycount = positions.length / 2
@@ -160,11 +152,25 @@ function main(positions) {
 
 // customized part
 function getLine() {
-    return [1, 1, 100, 100]
+    var x1 = Number(document.querySelector("#x1").value)
+    var y1 = Number(document.querySelector("#y1").value)
+    var x2 = Number(document.querySelector("#x2").value)
+    var y2 = Number(document.querySelector("#y2").value)
+    // console.log(y2, typeof (y2));
+    return [x1, y1, x2, y2]
 }
 
 function getMethod() {
-    return "ADD"
+    var method = document.querySelector("#method").value
+    console.log(method);
+    return method
+}
+
+function getCircle() {
+    var x1 = Number(document.querySelector("#ox").value)
+    var y1 = Number(document.querySelector("#oy").value)
+    var r = Number(document.querySelector("#r").value)
+    return [x1, y1, r]
 }
 
 function caculateThePoints(line, method) {
@@ -180,9 +186,38 @@ function caculateThePoints(line, method) {
     return mydefault
 }
 
-var line = getLine()
-var method = getMethod()
-var positions = caculateThePoints(line, method)
 
 
-main(positions);
+
+
+function draw() {
+    var method = getMethod()
+    switch (method) {
+        case "DDA":
+            var line = getLine()
+            var positions = DDA(line)
+            break
+        case "中点算法":
+            var line = getLine()
+            break
+        case "Bresenham":
+            var line = getLine()
+            break
+        case "中点画圆":
+            var circle = getCircle()
+
+            break
+    }
+
+    console.log(line);
+
+
+    var positions = caculateThePoints(line, method)
+
+
+    main(positions);
+
+}
+
+
+document.querySelector("#drawbtn").addEventListener("click", draw)
