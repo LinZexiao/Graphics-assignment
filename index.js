@@ -1,5 +1,8 @@
 "use strict";
 
+
+//main souce
+
 var vertexShaderSource = `#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
@@ -12,7 +15,7 @@ void main() {
   // gl_Position is a special variable a vertex shader
   // is responsible for setting
   gl_Position = a_position;
-  gl_PointSize = 50.0;
+  gl_PointSize = 20.0;
 }
 `;
 
@@ -60,7 +63,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
     return undefined;
 }
 
-function main() {
+function main(positions) {
     // Get A WebGL context
     var canvas = document.querySelector("#renderCanvas");
     var gl = canvas.getContext("webgl2");
@@ -86,13 +89,19 @@ function main() {
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-    var positions = [
-        0, 0,
-        0, 0.5,
-        0.7, 0,
-        1, 1,
-        -1, -1,
-    ];
+    // var positions = [
+    //     0, 0,
+    //     0, 0.5,
+    //     0.7, 0,
+    //     1, 1,
+    //     -1, -1,
+    // ];
+
+
+    //load customized data
+    var mycount = positions.length / 2
+
+
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -135,8 +144,45 @@ function main() {
     // var primitiveType = gl.TRIANGLES;
     var primitiveType = gl.POINTS;
     var offset = 0;
-    var count = 5;
+    var count = mycount;
     gl.drawArrays(primitiveType, offset, count);
 }
 
-main();
+
+
+
+
+
+
+
+
+
+
+// customized part
+function getLine() {
+    return [1, 1, 100, 100]
+}
+
+function getMethod() {
+    return "ADD"
+}
+
+function caculateThePoints(line, method) {
+    var mydefault = [
+        0, 0,
+        0, 0.5,
+        0.7, 0,
+        1, 1,
+        -1, -1,
+        0.5, 0.5,
+    ];
+
+    return mydefault
+}
+
+var line = getLine()
+var method = getMethod()
+var positions = caculateThePoints(line, method)
+
+
+main(positions);
