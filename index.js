@@ -175,6 +175,8 @@ function getCircle() {
     return [x1, y1, r]
 }
 
+
+
 function caculateThePoints(line, method) {
     var mydefault = [
         0, 0,
@@ -188,7 +190,15 @@ function caculateThePoints(line, method) {
     return mydefault
 }
 
-
+function adapter(positions) {
+    var temp = []
+    positions.forEach(function (value) {
+        var t = value / 50 - 1
+        temp.push(t)
+    })
+    console.log(temp);
+    return temp
+}
 
 
 
@@ -198,25 +208,31 @@ function draw() {
         case "DDA":
             var line = getLine()
             var positions = DDA(line)
+            positions = adapter(positions)
+            console.log(positions);
+
             break
         case "中点算法":
             var line = getLine()
+            var positions = Midpointline(line)
+            positions = adapter(positions)
+            console.log(positions);
             break
         case "Bresenham":
             var line = getLine()
+            var positions = lineBreshm(line)
+            positions = adapter(positions)
+            console.log(positions);
             break
         case "中点画圆":
             var circle = getCircle()
-
+            var positions = midPointCircle(circle)
+            positions = adapter(positions)
             break
     }
 
-    console.log(line);
 
-
-    var positions = caculateThePoints(line, method)
-
-
+    // console.log(line);
     main(positions);
 
 }
