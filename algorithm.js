@@ -460,135 +460,160 @@ function scanLine(polygon) {
 }
 
 
-function csline(line, rectangle) {
+
+function CS_LineClip(line, rectangle)
+// float x1, y1, x2, y2, XL, XR, YB, YT;
+//(x1,y1)(x2,y2)为线段的端点坐标，其他四个参数定义窗口的边界
+{
+
+
     LEFT = 1
     RIGHT = 2
-
     BOTTOM = 4
     TOP = 8
-    if (rectangle[0] > rectangle[2]) {
-        xl = rectangle[2]
-        xr = rectangle[0]
-    } else {
-        xl = rectangle[0]
-        xr = rectangle[2]
-    }
-    if (rectangle[1] > rectangle[3]) {
-        yt = rectangle[1]
-        yb = rectangle[3]
-    } else {
-        yt = rectangle[3]
-        yb = rectangle[1]
-    }
-    // xl = rectangle[0] //设置边长
-    // xr = rectangle[1]
-    // yb = rectangle[2]
-    // yt = rectangle[3]
-    length = line.length
 
-    function encode(x, y) { //issue?
-        var c = 0
-        if (x < xl) {
-            c = c | LEFT
-        }
-        if (x > xr) {
-            c = c | RIGHT
-        }
-        if (y < yb) {
-            c = c | BOTTOM
-        }
-        if (y > yt) {
-            c = c | TOP
-        }
+    if (rectangle[0] <= rectangle[2]) {
+        XL = rectangle[0]
+        XR = rectangle[2]
+    } else {
+        XL = rectangle[2]
+        XR = rectangle[0]
+    }
+    if (rectangle[1] <= rectangle[3]) {
+        YB = rectangle[1]
+        YT = rectangle[3]
+    } else {
+        YB = rectangle[3]
+        YT = rectangle[1]
+    }
+
+
+
+    function encode(x, y) //  计算点x, y的编码
+    {
+        var c = 0;
+
+        if (x < XL) {
+            c |= LEFT;
+        } // 置位CL
+        if (x > XR) {
+            c |= RIGHT;
+        } // 置位CR
+        if (y < YB) {
+            c |= BOTTOM;
+        } // 置位CB
+        if (y > YT) {
+            c |= TOP;
+        } // 置位CT
 
         return c
     }
-    var position = []
-    var i = 1
 
-    for (var i = 1; i <= length / 2; i++) {
-        x1 = line[(2 * i - 2 + length) % length]
-        y1 = line[(2 * i - 1 + length) % length]
-        x2 = line[(2 * i + length) % length]
-        y2 = line[(2 * i + 1 + length) % length]
-        if (x1 > x2) {
-            temp = x2
-            x2 = x1
-            x1 = temp
-            temp = y2
-            y2 = y1
-            y1 = temp
+
+    positions = []
+
+    for (let index = 0; index < line.length; index += 4) {
+
+        x1 = line[index + 0]
+        y1 = line[index + 1]
+        x2 = line[index + 2]
+        y2 = line[index + 3]
+
+        console.log("orgin", x1, y1, x2, y2);
+
+        code1 = encode(x1, y1);
+        code2 = encode(x2, y2); // 端点坐标编码
+
+        while (code1 != 0 || code2 != 0) // 直到”完全可见”
+        {
+
+
+            if ((code1 & code2) != 0) {
+                console.log(code1, code2);
+                console.log("显然不可见");
+                break;
+            } // 排除”显然不可见”情况
+
+            code = code1;
+            if (code1 == 0) code = code2; // 求得在窗口外的点
+            //按顺序检测到端点的编码不为0，才把线段与对应的窗口边界求交。
+            if ((LEFT & code) != 0) // 线段与窗口左边延长线相交
+            {
+                x = XL;
+                y = y1 + (y2 - y1) * (XL - x1) / (x2 - x1);
+            } else if ((RIGHT & code) != 0) // 线段与窗口右边延长线相交
+            {
+                x = XR;
+                y = y1 + (y2 - y1) * (XR - x1) / (x2 - x1);
+            } else if ((BOTTOM & code) != 0) // 线段与窗口下边延长线相交
+            {
+                y = YB;
+                x = x1 + (x2 - x1) * (YB - y1) / (y2 - y1);
+            } else if ((TOP & code) != 0) // 线段与窗口上边延长线相交
+            {
+                y = YT;
+                x = x1 + (x2 - x1) * (YT - y1) / (y2 - y1);
+            }
+
+
+
+            if (code == code1) {
+                x1 = x;
+                y1 = y;
+                code1 = encode(x, y);
+            } //裁去P1到交点
+            else {
+                x2 = x;
+                y2 = y;
+                code2 = encode(x, y);
+
+            } //裁去P2到交点
+
+            console.log(code1, code2, x1, y1, x2, y2);
         }
-        //        console.log(i)
-        console.log(x2)
+        console.log("out", x1, y1, x2, y2);
 
-        //    x1 = line[0]
-        //   x2 = line[2]
-        //   y1 = line[1]
-        //   y2 = line[3]
-        c1 = encode(x1, y1)
-        c2 = encode(x2, y2)
+        temp = DDA([x1, y1, x2, y2])
+        positions.push.apply(positions, temp)
+        console.log(x1, y1, x2, y2, temp, positions);
 
-        // console.log(B)
-
-
-        while (c1 != 0 || c2 != 0) {
-            if (c1 && c2 != 0) {
-                return
-            }
-
-
-
-            if (c1 == 0) {
-                code = c2
-            }
-            if (c1 != 0) {
-                code = c1
-            }
-            if (LEFT && code != 0) {
-                x = xl
-                y = y1 + (y2 - y1) * (xl - x1) / (x2 - x1)
-            }
-            if (RIGHT && code != 0) {
-                x = xr
-                y = y1 + (y2 - y1) * (xr - x1) / (x2 - x1)
-            }
-            if (BOTTOM && code != 0) {
-                y = yb
-                x = x1 + (x2 - x1) * (yb - y1) / (y2 - y1)
-            }
-            if (TOP && code != 0) {
-                y = yt
-                x = x1 + (x2 - x1) * (yt - y1) / (y2 - y1)
-            }
-
-            if (code == c1) {
-                x1 = x
-                y1 = y
-                c1 = encode(x, y)
-            } else {
-                x2 = x
-                y2 = y
-                c2 = encode(x, y)
-            }
-        }
-
-
-        console.log(i)
-
-        //    position.push(x)
-        //      position.push(y)
-
-        //   console.log("while",i,position);
-
-
-        lineg = [x1, y1, x2, y2]
-        position.push(DDA(lineg))
     }
 
 
 
+    // console.log(x1, y1, x2, y2);
+    return positions
+}
 
-    return position
 
+function StHodMan(polygon, rectangle) {
+    function isInside(p, rectangle) {
+        if ((p.x >= rectangle[0] && p.x <= rectangle[2] || p.x >= rectangle[2] && p.x <= rectangle[0]) && (p.y >= rectangle[1] && p.y <= rectangle[3] || p.y >= rectangle[3] && p.y <= rectangle[1])) {
+            p.inside = true
+            return true
+        } else {
+            p.inside = false
+            return false
+        }
+    }
+
+    function Vec(x, y, rectangle) {
+        this.x = x
+        this.y = y
+        this.inside = isInside({
+            "x": x,
+            "y": y
+        }, rectangle)
+    }
+    // s.x = polygon[0]
+    // s.y = polygon[1]
+
+    s = new Vec(polygon[0], polygon[1])
+
+    for (let index = 2; index < polygon.length; index += 2) {
+
+        p = new Vec(polygon[index], polygon[index + 1])
+
+
+    }
 }

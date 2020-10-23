@@ -132,7 +132,8 @@ function draw() {
 
             console.log("多边形裁剪", polygon, rectangle);
 
-            var positions = rectangle
+            var positions = sutherland(rectangle, polygon)
+            console.log("结果：", positions);
             break
         case "矩形截线":
             var rectangle = getRectangle()
@@ -144,7 +145,7 @@ function draw() {
 
             console.log("矩形截线", rectangle, lines);
 
-            var positions = csline(lines, rectangle)
+            var positions = CS_LineClip(lines, rectangle)
             break
 
 
