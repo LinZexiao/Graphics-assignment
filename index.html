@@ -5,6 +5,10 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Webgl</title>
 
+    <!-- <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script> -->
+    <script src="webgl-utils.js"></script>
+    <script src="webgl.js"></script>
+
     <style>
         html,
         body {
@@ -70,16 +74,21 @@
         }
 
         #innerbox {
-            margin: 80px 50px;
+            margin: 50px 50px;
         }
 
         input {
             width: 80;
-            margin: 20 0;
+            margin: 15 0;
         }
 
-        #methosdSelect {
-            margin: 20 0;
+        .selector {
+            /* margin: 20 0; */
+            float: left;
+        }
+
+        .paraFram {
+            display: none;
         }
 
         #draw {
@@ -89,7 +98,7 @@
         }
 
         .parameter div:first-child {
-            margin-top: 30;
+            margin-top: 25;
         }
     </style>
 
@@ -106,34 +115,64 @@
         </div>
         <div id="ctrlBox">
             <div id="innerbox">
-                <div id="methosdSelect">
-                    <select id="method">
-                        <option value="DDA">DDA</option>
-                        <option value="中点算法">中点算法</option>
-                        <option value="Bresenham">Bresenham</option>
-                        <option value="中点画圆">中点画圆</option>
-                    </select>
-                </div>
-                <div id="drawline" class="parameter">
-                    <div>起点的坐标：
-                        <input id="x1" type="number" value="1" placeholder="x">
-                        <input id="y1" type="number" value="2" placeholder="y">
-                    </div>
-                    <div>终点的坐标：
-                        <input id="x2" type="number" value="55" placeholder="x">
-                        <input id="y2" type="number" value="66" placeholder="y">
-                    </div>
-                </div>
-                <div id="drawcircle" class="parameter">
-                    <div>圆心的坐标：
-                        <input id="ox" type="number" placeholder="x">
-                        <input id="oy" type="number" placeholder="y">
-                    </div>
-                    <div> 半 &nbsp &nbsp &nbsp&nbsp&nbsp&nbsp径 ：
-                        <input id="r" type="number">
+
+                <div style="display: block; height: 30;">
+                    <!-- selector box -->
+                    <div class="selector" id="examSelect">
+                        <select id="exam">
+                            <option value="exam1">画二维图元</option>
+                            <option value="exam2">填充与裁剪</option>
+                        </select></div>
+                    <div class="selector" id="methosdSelect">
+                        <select id="method">
+
+                        </select>
                     </div>
                 </div>
 
+
+
+                <div class="paraFram" id="exam1">
+                    <div id="drawline" class="parameter">
+                        <div>起点的坐标：
+                            <input id="x1" type="number" value="1" placeholder="x">
+                            <input id="y1" type="number" value="2" placeholder="y">
+                        </div>
+                        <div>终点的坐标：
+                            <input id="x2" type="number" value="55" placeholder="x">
+                            <input id="y2" type="number" value="66" placeholder="y">
+                        </div>
+                    </div>
+                    <div id="drawcircle" class="parameter">
+                        <div>圆心的坐标：
+                            <input id="ox" type="number" placeholder="x">
+                            <input id="oy" type="number" placeholder="y">
+                        </div>
+                        <div> 半 &nbsp &nbsp &nbsp&nbsp&nbsp&nbsp径 ：
+                            <input id="r" type="number">
+                        </div>
+                    </div>
+                    <div id="drawEllipe" class="parameter">
+                        <!-- <div>圆心的坐标：
+                        <input id="ox2" type="number" placeholder="x">
+                        <input id="oy2" type="number" placeholder="y">
+                    </div> -->
+                        <div>椭圆的轴长：
+                            <input id="a" type="number" placeholder="a">
+                            <input id="b" type="number" placeholder="b">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="paraFram" id="exam2">
+                    <label style="display: block;"><input name="element" type="radio" value="Lines" />直线 </label>
+                    <label style="display: block;"><input name="element" type="radio" value="Polygon" />多边形 </label>
+                    <label style="display: block;"><input name="element" type="radio" value="Rectangle" />矩形 </label>
+                    <button id="clearALL">清除所有</button>
+
+                </div>
                 <div id="draw">
                     <button id="drawbtn">Draw</button>
                 </div>
@@ -145,8 +184,11 @@
 
     </div>
 </body>
-<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="contrl.js"></script>
+
 <script src="algorithm.js"></script>
 <script src="index.js"></script>
+
+
 
 </html>

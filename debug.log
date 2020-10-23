@@ -1,0 +1,25 @@
+
+
+
+custum
+
+v(getfire)
+v(getcigare)
+p(fire)
+p(cigrate)
+抽烟
+
+
+服务员A
+
+p(getcigare)
+song cigrate
+v(cigrate)
+
+
+
+服务员B
+p(getfire)
+song fire
+v(fire)
+
